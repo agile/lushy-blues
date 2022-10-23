@@ -1,5 +1,8 @@
-A Lush Theme for Neovim.
-===
+A Lushy Blues Theme for Neovim
+==============================
 
-See: http://git.io/lush.nvim for more information on Lush and a helper script
-to setup your repo clone.
+Used [Lush](http://git.io/lush.nvim) to create an updated version of the old [brookstream](https://www.vim.org/scripts/script.php?script_id=619) colorscheme.
+
+* [x] [lualine](https://github.com/nvim-lualine/lualine.nvim)
+* [ ] [treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+* [ ] [bufferline](https://github.com/akinsho/bufferline.nvim)

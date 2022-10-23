@@ -42,31 +42,88 @@
 --
 --  `:lua require('lush').ify()`
 
-local lush = require('lush')
+local lush = require("lush")
 local hsl = lush.hsl
 
-local black = hsl(0, 0, 0)              -- #000000
-local nearly_blacker = hsl(0, 0, 2)     -- #050505
-local nearly_black = hsl(0, 0, 3)       -- #080808
-local darker_gray = hsl(0, 0, 27)       -- #454545
-local dark_gray = hsl(0, 0, 50)         -- #808080
-local mid_red = hsl(0,100,27)           -- #880000
-local bright_red = hsl(0,100,37)        -- #BD0000
-local steal_blue = hsl(180, 25, 25)     -- #2F4F4F
-local dark_blue = hsl(240, 100, 27)     -- #000088
-local royal_blue = hsl(240, 100, 63)    -- #4444FF
-local steal_teal = hsl(207,44,49)       -- #4682b4
-local mid_teal = hsl(180,100,63)        -- #44FFFF
-local gray_blue = hsl(180, 14, 77)      -- #BBCCCC
-local white = hsl(0, 0, 100)            -- #FFFFFF
+-- stylua: ignore start
+local c = {
+    neutral        = hsl(0, 0, 73),     -- #BBBBBB
+    white          = hsl(0, 0, 100),    -- #FFFFFF
+    black          = hsl(0, 0, 0),      -- #000000
+    mid_red        = hsl(0,100,27),     -- #880000
+    steal_blue     = hsl(180, 25, 25),  -- #2F4F4F
+    dark_blue      = hsl(240, 100, 27), -- #000088
+    royal_blue     = hsl(240, 100, 63), -- #4444FF
+    steal_teal     = hsl(207,44,49),    -- #4682b4
+    mid_teal       = hsl(180,100,63),   -- #44FFFF
 
-local bright_green = hsl(120, 100, 63)  -- #44FF44
-local bright_yellow = hsl(60, 100, 50)  -- #FFFF00
+    bgreen  = hsl(120, 100, 63),
+    byellow = hsl(60, 100, 50),
+    borange = hsl(29, 100, 55),
+    bred    = hsl(0,100,37),
 
-local sea_foam  = hsl(208, 80, 80)      -- Try presing C-a and C-x
-local sea_crest = hsl(208, 90, 30)      -- to increment or decrement
-local sea_deep  = hsl(208, 90, 10)      -- the integers used here.
-local sea_sand  = hsl(0, 0, 73)         -- #BBBBBB
+    teal0  = hsl(180,100,000),
+    teal1  = hsl(180,100,010),
+    teal2  = hsl(180,100,020),
+    teal3  = hsl(180,100,030),
+    teal4  = hsl(180,100,040),
+    teal5  = hsl(180,100,050),
+    teal6  = hsl(180,100,060),
+    teal7  = hsl(180,100,070),
+    teal8  = hsl(180,100,080),
+    teal9  = hsl(180,100,090),
+    teal10 = hsl(180,100,100),
+
+    sky0  = hsl(203,100,000),
+    sky1  = hsl(203,100,010),
+    sky2  = hsl(203,100,020),
+    sky3  = hsl(203,100,030),
+    sky4  = hsl(203,100,040),
+    sky5  = hsl(203,100,050),
+    sky6  = hsl(203,100,060),
+    sky7  = hsl(203,100,070),
+    sky8  = hsl(203,100,080),
+    sky9  = hsl(203,100,090),
+    sky10 = hsl(203,100,100),
+
+    blue0  = hsl(255,100,000),
+    blue1  = hsl(255,100,010),
+    blue2  = hsl(255,100,020),
+    blue3  = hsl(255,100,030),
+    blue4  = hsl(255,100,040),
+    blue5  = hsl(255,100,050),
+    blue6  = hsl(255,100,060),
+    blue7  = hsl(255,100,070),
+    blue8  = hsl(255,100,080),
+    blue9  = hsl(255,100,090),
+    blue10 = hsl(255,100,100),
+
+    purp0  = hsl(275,100,000),
+    purp1  = hsl(275,100,010),
+    purp2  = hsl(275,100,020),
+    purp3  = hsl(275,100,030),
+    purp4  = hsl(275,100,040),
+    purp5  = hsl(275,100,050),
+    purp6  = hsl(275,100,060),
+    purp7  = hsl(275,100,070),
+    purp8  = hsl(275,100,080),
+    purp9  = hsl(275,100,090),
+    purp10 = hsl(275,100,100),
+
+    grey0  = hsl(000,000,000),
+    grey02 = hsl(000,000,002),
+    grey03 = hsl(000,000,003),
+    grey1  = hsl(000,000,010),
+    grey2  = hsl(000,000,020),
+    grey3  = hsl(000,000,030),
+    grey4  = hsl(000,000,040),
+    grey5  = hsl(000,000,050),
+    grey6  = hsl(000,000,060),
+    grey7  = hsl(000,000,070),
+    grey8  = hsl(000,000,080),
+    grey9  = hsl(000,000,090),
+    grey10 = hsl(000,000,100),
+}
 
 -- LSP/Linters mistakenly show `undefined global` errors in the spec, they may
 -- support an annotation like the following. Consult your server documentation.
@@ -99,62 +156,84 @@ local theme = lush(function()
     --
     -- See :h highlight-groups
     --
-    -- ColorColumn  { }, -- Columns set with 'colorcolumn'
+    Normal          { fg = c.neutral, bg = c.black  }, -- Normal text
+    NormalNC        { fg = Normal.fg, bg = Normal.bg.li(1) }, -- normal text in non-current windows
+    -- NormalFloat     { fg = teal8 }, -- Normal text in floating windows.
     -- Conceal         { fg = Normal.fg.da(20), gui="italic" }, -- Placeholder characters substituted for concealed text (see 'conceallevel')
-    Cursor          { fg = black, bg = bright_green }, -- Character under the cursor
-    -- lCursor      { }, -- Character under the cursor when |language-mapping| is used (see 'guicursor')
-    -- CursorIM     { }, -- Like Cursor, but used when in IME mode |CursorIM|
-    -- CursorColumn { }, -- Screen-column at the cursor, when 'cursorcolumn' is set.
-    -- CursorLine   { }, -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
-    Directory       { fg=mid_teal }, -- Directory names (and other special names in listings)
-    DiffAdd         { fg=bright_yellow, bg=nearly_black }, -- |diff.txt|
-    DiffChange      { fg=white, bg=nearly_black }, -- Diff mode: Changed line |diff.txt|
-    DiffDelete      { fg = darker_gray, bg = nearly_black }, -- Diff mode: Deleted line |diff.txt|
-    DiffText        { fg = mid_red, bg = nearly_black }, -- Diff mode: Changed text within a changed line |diff.txt|
-    -- EndOfBuffer  { }, -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
-    -- TermCursor   { }, -- Cursor in a focused terminal
-    -- TermCursorNC { }, -- Cursor in an unfocused terminal
-    ErrorMsg        { fg = white, bg = mid_red }, -- Error messages on the command line
-    -- VertSplit    { }, -- Column separating vertically split windows
-    Folded          { fg = dark_blue }, -- Line used for closed folds
-    -- FoldColumn   { }, -- 'foldcolumn'
-    -- SignColumn   { }, -- Column where |signs| are displayed
-    IncSearch       { fg = gray_blue, bg = black }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
-    -- Substitute   { }, -- |:substitute| replacement text highlighting
-    LineNr          { fg = steal_teal, bg = nearly_blacker }, -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
-    -- CursorLineNr { }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
-    -- MatchParen   { }, -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
-    ModeMsg         { fg = white }, -- 'showmode' message (e.g., "-- INSERT -- ")
-    -- MsgArea      { }, -- Area for messages and cmdline
-    -- MsgSeparator { }, -- Separator for scrolled messages, `msgsep` flag of 'display'
-    MoreMsg         { fg = bright_green }, -- |more-prompt|
-    NonText         { fg = royal_blue }, -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
-    Normal          { fg = sea_sand, bg = black  }, -- Normal text
-    -- NormalFloat  { }, -- Normal text in floating windows.
-    -- NormalNC     { }, -- normal text in non-current windows
-    Pmenu           { fg=dark_blue, bg=mid_teal }, -- Popup menu: Normal item.
-    PmenuSel        { fg = mid_teal, bg = dark_blue, gui="underline" }, -- Popup menu: Selected item.
-    -- PmenuSbar    { }, -- Popup menu: Scrollbar.
-    -- PmenuThumb   { }, -- Popup menu: Thumb of the scrollbar.
 
-    Question        { fg = bright_yellow }, -- |hit-enter| prompt and yes/no questions
+    Search          { fg = c.grey0, bg = c.borange }, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
+    CurSearch       { fg = Search.fg.da(20), bg = Search.bg.da(20) }, -- highlighting search pattern under the cursor (see 'hlsearch').
+    IncSearch       { fg = c.grey0, bg = c.byellow }, -- 'incsearch' highlighting; also used for the text replaced with ":s///c"
+    Substitute      { fg = c.teal1, bg = c.teal4 }, -- |:substitute| replacement text highlighting
+    MatchParen      { fg = c.teal0, bg = c.teal8 }, -- Character under the cursor or just before it, if it is a paired bracket, and its match. |pi_paren.txt|
+
+    -- haven't figured out why these don't appear to have any effect
+    Cursor          { fg = c.black, bg = c.bgreen }, -- Character under the cursor
+    lCursor         { fg = Cursor.fg, bg = Cursor.bg }, -- Character under the cursor when |language-mapping| is used (see 'guicursor')
+    CursorIM        { fg = Cursor.fg, bg = Cursor.bg }, -- Like Cursor, but used when in IME mode |CursorIM|
+    TermCursor      { fg = Cursor.fg, bg = Cursor.bg }, -- Cursor in a focused terminal
+    TermCursorNC    { fg = Cursor.fg, bg = Cursor.bg }, -- Cursor in an unfocused terminal
+
+    ColorColumn     { bg = c.purp8 }, -- Columns set with 'colorcolumn'
+    CursorColumn    { bg = c.purp1.da(42) }, -- Screen-column at the cursor, when 'cursorcolumn' is set.
+    CursorLine      { fg = CursorColumn.fg, bg = CursorColumn.bg, gui=CursorColumn.gui }, -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
+
+    Directory       { fg=c.mid_teal }, -- Directory names (and other special names in listings)
+
+    DiffAdd         { fg=c.byellow, bg=c.grey03 }, -- |diff.txt|
+    DiffChange      { fg=c.white, bg=c.grey03 }, -- Diff mode: Changed line |diff.txt|
+    DiffDelete      { fg = c.grey3, bg = c.grey03 }, -- Diff mode: Deleted line |diff.txt|
+    DiffText        { fg = c.mid_red, bg = c.grey03 }, -- Diff mode: Changed text within a changed line |diff.txt|
+
+    EndOfBuffer     { }, -- Filler lines (~) after the end of the buffer. By default, this is highlighted like |hl-NonText|.
+    ErrorMsg        { fg = c.white, bg = c.mid_red }, -- Error messages on the command line
+
+
+    Folded          { fg = c.dark_blue }, -- Line used for closed folds
+    FoldColumn      { }, -- 'foldcolumn'
+
+    VertSplit       { }, -- Column separating vertically split windows
+    SignColumn      { }, -- Column where |signs| are displayed
+    LineNr          { fg = c.steal_teal, bg = c.grey02 }, -- Line number for ":number" and ":#" commands, and when 'number' or 'relativenumber' option is set.
+    CursorLineNr    { fg = c.byellow, bg = c.black }, -- Like LineNr when 'cursorline' or 'relativenumber' is set for the cursor line.
+
+    ModeMsg         { fg = c.white }, -- 'showmode' message (e.g., "-- INSERT -- ")
+    MsgArea         { fg = c.sky5 }, -- Area for messages and cmdline
+    MsgSeparator    { fg = c.teal5 }, -- Separator for scrolled messages, `msgsep` flag of 'display'
+    MoreMsg         { fg = c.bgreen }, -- |more-prompt|
+
+    NonText         { fg = c.teal3 }, -- '@' at the end of the window, characters from 'showbreak' and other characters that do not really exist in the text (e.g., ">" displayed when a double-wide character doesn't fit at the end of the line). See also |hl-EndOfBuffer|.
+
+    -- Pmenu           { fg=c.dark_blue, bg=c.mid_teal }, -- Popup menu: Normal item.
+    -- PmenuSel        { fg = c.mid_teal, bg = c.dark_blue, gui="underline" }, -- Popup menu: Selected item.
+    Pmenu           { fg = c.teal5, bg = c.teal0 }, -- Popup menu: Normal item.
+    PmenuSel        { fg = c.teal5, bg = c.blue4, gui="bold,underline" }, -- Popup menu: Selected item.
+    PmenuSbar       { }, -- Popup menu: Scrollbar.
+    PmenuThumb      { }, -- Popup menu: Thumb of the scrollbar.
+
+    Question        { fg = c.byellow }, -- |hit-enter| prompt and yes/no questions
     -- QuickFixLine { }, -- Current |quickfix| item in the quickfix window. Combined with |hl-CursorLine| when the cursor is there.
-    -- Search       { }, -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
-    SpecialKey      { fg = royal_blue }, -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
+
+    SpecialKey      { fg = c.royal_blue }, -- Unprintable characters: text displayed differently from what it really is. But not 'listchars' whitespace. |hl-Whitespace|
     -- SpellBad     { }, -- Word that is not recognized by the spellchecker. |spell| Combined with the highlighting used otherwise.
     -- SpellCap     { }, -- Word that should start with a capital. |spell| Combined with the highlighting used otherwise.
     -- SpellLocal   { }, -- Word that is recognized by the spellchecker as one that is used in another region. |spell| Combined with the highlighting used otherwise.
     -- SpellRare    { }, -- Word that is recognized by the spellchecker as one that is hardly ever used. |spell| Combined with the highlighting used otherwise.
-    StatusLine      { fg = white, bg = steal_blue }, -- Status line of current window
-    StatusLineNC    { fg = black, bg = sea_sand }, -- Status lines of not-current windows. Note: If this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
+
+    StatusLine      { fg = c.white, bg = c.steal_blue }, -- Status line of current window
+    StatusLineNC    { fg = c.black, bg = c.neutral }, -- Status lines of not-current windows. Note: If this is equal to "StatusLine" Vim will use "^^^" in the status line of the current window.
+
     -- TabLine      { }, -- Tab pages line, not active tab page label
     -- TabLineFill  { }, -- Tab pages line, where there are no labels
     -- TabLineSel   { }, -- Tab pages line, active tab page label
-    Title           { fg = white }, -- Titles for output from ":set all", ":autocmd" etc.
-    Visual          { fg = black, bg = sea_sand }, -- Visual mode selection
+
+    Title           { fg = c.white }, -- Titles for output from ":set all", ":autocmd" etc.
+    Visual          { fg = c.black, bg = c.sky5 }, -- Visual mode selection
     -- VisualNOS    { }, -- Visual mode selection when vim is "Not Owning the Selection".
-    WarningMsg      { fg = bright_yellow }, -- Warning messages
-    -- Whitespace   { }, -- "nbsp", "space", "tab" and "trail" in 'listchars'
+
+    WarningMsg      { fg = c.byellow }, -- Warning messages
+    Whitespace      { fg = c.purp1 }, -- "nbsp", "space", "tab" and "trail" in 'listchars' (indentation markers)
+
     -- Winseparator { }, -- Separator between window splits. Inherts from |hl-VertSplit| by default, which it will replace eventually.
     -- WildMenu     { }, -- Current match in 'wildmenu' completion
 
@@ -166,7 +245,7 @@ local theme = lush(function()
     --
     -- Uncomment and edit if you want more specific syntax highlighting.
 
-    Comment           { fg = Normal.fg.darken(60) }, -- Any comment
+    Comment           { fg = Normal.fg.darken(40) }, -- Any comment
 
     Constant          { fg = hsl("#00aaaa") }, -- (*) Any constant
     String            { fg = hsl("#4682B4"), gui="none" }, --   A string constant: "this is a string"
@@ -192,7 +271,7 @@ local theme = lush(function()
     -- Macro          { }, --   Same as Define
     -- PreCondit      { }, --   Preprocessor #if, #else, #endif, etc.
 
-    Type              { fg = white }, -- (*) int, long, char, etc.
+    Type              { fg = c.white }, -- (*) int, long, char, etc.
     -- StorageClass   { }, --   static, register, volatile, etc.
     -- Structure      { }, --   struct, union, enum, etc.
     -- Typedef        { }, --   A typedef
@@ -206,7 +285,7 @@ local theme = lush(function()
 
     Underlined        { fg = hsl("#4444FF"), gui = "bold" }, -- gui = "underline" }, -- Text that stands out, HTML links
     Ignore            { fg = hsl("#444444") }, -- Left blank, hidden |hl-Ignore| (NOTE: May be invisible here in template)
-    Error             { fg = hsl("#BB0000"), bg = black }, -- Any erroneous construct
+    Error             { fg = hsl("#BB0000"), bg = c.black }, -- Any erroneous construct
     Todo              { fg = hsl("#FFF300"), bg = hsl("#AA0006") }, -- Anything that needs extra attention; mostly the keywords TODO FIXME and XXX
 
     -- These groups are for the native LSP client and diagnostic system. Some
@@ -322,4 +401,5 @@ end)
 -- Return our parsed theme for extension or use elsewhere.
 return theme
 
+-- stylua: ignore end
 -- vi:nowrap
