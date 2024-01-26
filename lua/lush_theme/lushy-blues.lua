@@ -159,7 +159,7 @@ local theme = lush(function(injected_functions)
     --
     -- See :h highlight-groups
     --
-    Normal { fg = c.neutral, bg = c.black },           -- Normal text
+    Normal { fg = c.neutral, bg = c.black }, -- Normal text
     NormalNC { fg = Normal.fg, bg = Normal.bg.li(1) }, -- normal text in non-current windows
     -- NormalFloat     { fg = teal8 }, -- Normal text in floating windows.
     -- Conceal         { fg = Normal.fg.da(20), gui="italic" }, -- Placeholder characters substituted for concealed text (see 'conceallevel')
