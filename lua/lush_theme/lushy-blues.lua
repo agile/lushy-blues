@@ -162,7 +162,7 @@ local theme = lush(function(injected_functions)
     Normal { fg = c.neutral, bg = c.black }, -- Normal text
     NormalNC { fg = Normal.fg, bg = Normal.bg.li(1) }, -- normal text in non-current windows
     -- NormalFloat     { fg = teal8 }, -- Normal text in floating windows.
-    -- Conceal         { fg = Normal.fg.da(20), gui="italic" }, -- Placeholder characters substituted for concealed text (see 'conceallevel')
+    Conceal         { fg = Normal.fg.da(50) }, -- Placeholder characters substituted for concealed text (see 'conceallevel')
 
     Search { fg = c.grey0, bg = c.borange },                    -- Last search pattern highlighting (see 'hlsearch'). Also used for similar items that need to stand out.
     CurSearch { fg = Search.fg.da(20), bg = Search.bg.da(20) }, -- highlighting search pattern under the cursor (see 'hlsearch').
