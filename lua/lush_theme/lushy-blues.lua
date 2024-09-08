@@ -177,7 +177,7 @@ local theme = lush(function(injected_functions)
     TermCursor { fg = Cursor.fg, bg = Cursor.bg },                                     -- Cursor in a focused terminal
     TermCursorNC { fg = Cursor.fg, bg = Cursor.bg },                                   -- Cursor in an unfocused terminal
 
-    ColorColumn { bg = c.purp8 },                                                      -- Columns set with 'colorcolumn'
+    ColorColumn { fg=c.black, bg = c.purp8 },                                          -- Columns set with 'colorcolumn'
     CursorColumn { bg = c.purp1.da(42) },                                              -- Screen-column at the cursor, when 'cursorcolumn' is set.
     CursorLine { fg = CursorColumn.fg, bg = CursorColumn.bg, gui = CursorColumn.gui }, -- Screen-line at the cursor, when 'cursorline' is set. Low-priority if foreground (ctermfg OR guifg) is not set.
 
